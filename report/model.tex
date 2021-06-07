@@ -1,0 +1,118 @@
+We present a version of a modifier model to model the relationship between \ac{hgt} and \ac{crc} activity in response to environmental threats.
+For simplicity we consider only a single antibiotic and a single bacteriophage and that the resistance allele confers full resistance to the antibiotic.
+\subsection{Alleles}
+We consider resistance allele $R$ that represents whether a bacterium posses a antibiotic resistance gene.
+We also consider two modifier allele $C,H$ that represent the expression of \ac{crc} and \ac{hgt} machinery and  respectively
+% Allele Definitions
+\begin{table}[H]
+    \centering
+    \begin{tabular}{@{}lll@{}}
+        \toprule
+        \multicolumn{2}{c}{Allele} & Description \\
+        \cmidrule(l){1-2}
+        Major & Minor & \\
+        \midrule
+        $R$ & $r$ & has/does not have resistance gene \\
+        $H$ & $h$ & \ac{hgt} machinery is expressed/not expressed  \\
+        $C$ & $c$ & \ac{crc} is expressed/not expressed \\
+        \bottomrule
+    \end{tabular}
+    \caption{Allele definitions}
+\end{table}
+\FloatBarrier
+
+\subsection{Environment}
+We consider 3 different environments
+\begin{itemize}
+    \item $E_n$: Neutral, no threats
+    \item $E_b$: Bacteriophage, increased risk of contact with phage
+    \item $E_a$: Antibiotic, increased risk of contact with antibiotic
+\end{itemize}
+We consider various scenarios that involve different functions that govern the transition from one environment to the next.
+We consider 3 models of changing environments
+\paragraph{Singular Threat:}
+A singular event of antibiotic dosage or phage outbreak $e=(s,l)$ is defined by a length $l \in [0,M]$ and a start time $s \in [0,T]$.
+The maximum length of a event is $M$ generations and the model runs over $T$ generations.
+\paragraph{Cyclical Threat:}
+Regular events of antibiotic dosage or phage outbreak every $2l$ generations.
+More formally, each event is of length $l$ and we pick a set start times for each event $s_1=l, s_2=s_1+2l,\dots, s_i=s_{i-1}+2l$, and continue until $s_i+2l > T$.
+Note you could very easily adapt this to randomly sample start times and lengths by alternatively sampling a first event $e_1 = (s_1,l_1) \in ([0,T],[0,M])$, a second event $e_2 = (s_2,l_2) \in ([s_1+l_1,T],[0,M])$ and so on until $s_i+l_i > T$.
+\paragraph{Alternating Threat:}
+It is defined similarly to the Cyclical Threat model but with switching between antibiotic dosage and phage outbreaks at each event.
+
+\subsection{Fitness}
+Now we want to know the fitness of each genotype in each environment, which we will define with the parameters $s_p,s_m$.
+Here $s_p$ is the fitness benefit of protecting against the environmental threat (antibiotic or phage) and $s_m$ is the metabolic cost of expressing either \ac{hgt} or \ac{crc} machinery.
+\footnote{Note that while we call $s_m$ the metabolic cost there are other fitness costs expressing \ac{crc} or \ac{hgt} machinery such as taking in toxic gene products, \ac{crc} autoimmunity, potential genome instability etc. but we group them all under the $s_m$ penalty.}
+Both $H$ and $C$ express different proteins so any -HC genotype bacterium incurs a $2s_m$.
+The $H$ allele acts like a modifier allele, it does not directly impact fitness outside of the metabolic cost but instead increases the success of gaining $R$ via HGT.
+To ensure that we do see the invasion of protective alleles we also define $s_p >> s_m$ to better reflect the biological reality.
+Given the above we define the fitness of each genotype in each environments in the following table
+% Fitness
+\begin{table}[H]
+    \centering
+    $\begin{array}{llll}
+    \toprule
+    Genotype & \multicolumn{3}{c}{Environment} \\
+    \cmidrule(r){2-4}
+        & E_n & E_b & E_a \\
+    \midrule
+    RCH & 1-2s_m & 1+s_p-2s_m & 1+s_p-2s_m \\
+    RCh & 1- s_m & 1+s_p- s_m & 1+s_p- s_m \\
+    RcH & 1- s_m & 1    - s_m & 1+s_p- s_m \\
+    Rch & 1      & 1          & 1+s_p      \\
+    rCH & 1-2s_m & 1+s_p-2s_m & 1    -2s_m \\
+    rCh & 1 -s_m & 1+s_p- s_m & 1    - s_m \\
+    rcH & 1- s_m & 1    - s_m & 1    - s_m \\
+    rch & 1      & 1          & 1          \\
+    \bottomrule
+    \end{array}$
+    \caption{Relative fitness values for each genotype in each environment}
+    \label{ft}
+\end{table}
+\FloatBarrier
+
+\subsection{Model Behaviour}
+We are modelling bacteria, so we have an infinite haploid population that undergoes \emph{asexual} reproduction (no random mating).
+We have 8 genotypes so we must keep track of 8 frequencies $[x_1(t),\dots,x_8(t)]$.
+For every generation we have 1) gene transfer 2) mutation and 3) selection, here gene transfer is like a random mating step.
+Note that $x_g$ represents the frequency of the genotype $g$.
+
+\subsubsection{Gene Transfer}
+The benefit of the $H$ allele over $h$ is defined later as it relates to the transfer step.
+The probabilities of a successful transfer event between between two genotypes $G_r=$r- - and $G_R=$R- - (i.e. $r \to R$ transfer) are $g_H$ and $g_h$ for the -H-, -h- genotypes respectively where $g_H > g_h$.
+Note that the $H$ allele matters for the both $G_r,G_R$ bacteria, so given two -H- bacteria the success probability is $2g_H$, given that only the receiving bacteria is $-H-$ we have just $g_H$ and given neither we have $g_h$.
+The population frequency after selection is defined as
+$$x_g^t = x_g + \delta(g)\sum_{x_R} x_{\neg g}x_R T(x_{\neg g},x_R)$$
+where $T(g,\neg g)$ is defined as
+\[T(g, \neg g) = \begin{dcases}
+                     g_h & h \in g,\neg g \\
+                     g_H & h \in g, H \in \neg g  \\
+                     g_H & H \in g, h \in \neg g  \\
+                    2g_H & H \in g,\neg g
+                 \end{dcases}\]
+and $\delta(g)$ is defined as
+$$\delta(g) = \begin{cases} 1 & R \in g \\ -1 & R \notin g\end{cases}$$
+Note that if $g=RCH$ then $\neg g=rCH$, defined similarly for $cH,Ch,ch$ genotype and $x_R = \{RCH,RcH,RCh,Rch\}$.
+
+\subsubsection{Mutation}
+Our mutation step is the same as in a regular modifier model.
+A bacterium can evolve the resistance gene at a rate $P(r\to R) = \mu_R$ and a rate $\sqrt{\mu_R}$ with the selective pressure (in $E_a$).
+Similarly it can lose the resistance gene at a rate $P(R\to r) =\mu_r$ and a rate $\sqrt{\mu_r}$ without the selective pressure (not in $E_a$).
+The genotype frequencies after mutation are
+$$x_g^s = (1-\mu(g,e))x_g^t + \mu(g,e)x_{\neg g}^t$$
+where $\mu(g,e)$ is defined as
+\[\mu(g,e) = \begin{dcases}
+           \mu_R & r \in g, e \neq E_a \\
+    \sqrt{\mu_R} & r \in g, e = E_a \\
+           \mu_r & R \in g, e \neq E_a \\
+    \sqrt{\mu_r} & R \in g, e = E_a \\
+          \end{dcases}\]
+
+\subsubsection{Selection}
+Our selection step is also the same as in a regular modifier model using our fitness values.
+The genotype frequencies after selection are
+$$x_g' = \frac{x_g^sf(g,e)}{\bar{w}}$$
+where $f(g)$ picks the correct fitness coefficient from Table \ref{ft} and $\bar{w}$ is the average fitness $\bar{w} = \sum_g x_g^sf(g)$.
+
+

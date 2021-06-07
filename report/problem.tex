@@ -1,0 +1,32 @@
+\subsection{CRISPR-Cas Systems}
+In the new people often discuss \ac{crc} technology for the purpose of gene editing.
+However CRISPR was originally discovered in bacteria as a form of adaptive immunity against bacteriophage infection.
+Bacteriophages are viruses that target bacteria, injecting their DNA/RNA into the target cell and having it integrate into the genome and eventually kill the target.
+Bacteria want to protect against such infection so being able to target bacteriophage DNA for degradation can improve fitness, especially in phage-dense environments.
+If a cell survives an infection CRISPR can take up part of the defeated phage DNA and use it as a kind of identifier to prevent future infections.
+This "identifier" is integrated into the genome and can act as a guide for the Cas9 protein (nuclease), guiding Cas9 to any matching DNA sequence in the cell and degrading it.
+So any DNA matching the identifier (i.e. phage DNA) that enters the cell will be matched by the identifier and targeted for degradation by Cas9 if \ac{crc} proteins are being expressed.
+
+However not all failed infections will result in identifier uptake.
+Further \ac{crc} can be metabolically expensive so it can incur a fitness cost in environments with low chance for infection.
+The most interesting part is that \textit{any} DNA in the cytoplasm can be integrated as a CRISPR identifier.
+Random DNA floating in the environment, DNA resulting from aborted \ac{hgt} events and even the cell's own DNA can all become guides for Cas9.
+CRISPR has been shown to interfere with \ac{hgt} events which creates complex fitness dynamics for bacteria.
+
+\subsection{Horizontal Gene Transfer}
+Unlike eukaryotes, bacteria can engage in what is called \ac{hgt}, transferring genes between organisms who are not related.
+There are 3 main ways this is done: 1) taking up DNA from the environment 2) transferring DNA between cells 3) transferred via phage infection.
+When such external DNA makes it's way inside the cytoplasm it can be integrated into the bacterium's genome and can be expressed.
+
+In some cases random DNA can be inserted inside of important genes and disrupt their functions.
+In other cases things like antibiotic resistance genes can be gained, much faster than they would evolve naturally.
+Due to the mechanics of transfer, how often it fails and that events can be either functional or disruptive, fitness impacts often depend on the environment.
+How much \ac{hgt} a cell allows (via transcription of necessary \ac{hgt} machinery) can lead to complicated fitness dynamics.
+
+\subsection{CRISPR-Cas vs HGT}
+The mechanics of how these interactions work have been studied and are much to complicated for this report to discuss, but there is much variety in how CRISPR can interfere with \ac{hgt}.
+Since CRISPR limits the integration of DNA into the genome then it is intuitive that it can deter \ac{hgt} events as well, as well there is research demonstrating this.
+In fact it has also been shown that in some cases CRISPR can actually increase the rates of \ac{hgt} in a bacterial population.
+This is further complicated by the fact that \ac{crc} expression can be modulated, as well as that \ac{crc} genes can themselves be transferred horizontally between bacteria.
+The variety of these interactions make understanding the fitness trade-off of \ac{hgt} and \ac{crc} expression quite complex and specific and thus worthy of further study.
+
